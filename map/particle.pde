@@ -6,9 +6,9 @@ class Particle {
   
   color p_color;
   float mass = 2;
-  float radius = 15;
+  float radius = 3;
   
-  float life_span = 200;
+  float life_span = 245;
   boolean start_death = false;
   PShape particle;
   float start_time;
@@ -42,6 +42,8 @@ class Particle {
     
     float randx = random(0.1,1);
     float randy = random(0.1,1);
+    
+    p_color = c;
     
     applyForce(new Vector(randx,randy,0));
     
@@ -85,14 +87,18 @@ class Particle {
   void update() {
     float dt = millis() - start_time; // why is this not used, how is this working?
     
-    
+    float chance = random(0,0.05);
+    if (chance > 0.03) {
+      float xchance = random(0,1);
+      if (xchance > 0.5) {
+        velocity.x += chance;
+      } else {
+        velocity.y += chance;
+      }
+    }
 
     velocity.addV(acceleration);
    
-    //applyForce(new Vector(-1,-1,0));
-   
-    //velocity.z += random(-3,3);
-    
     location.addV(velocity); 
     
     //velocity.addV(gravity); <-- this kind of constant could be wind
@@ -101,20 +107,24 @@ class Particle {
     life_span--;
   }
   
-  
+  float shrink = 0;
   void display() {
     
     pushMatrix();      
       translate(location.x, location.y, location.z);
-      fill(120,20,20,255-fade);
+      fill(p_color,255-fade);
       //tint(255,255-fade);
-      ellipse(0, 0, radius, radius);
+      ellipse(0, 0, radius-shrink, radius-shrink);
     popMatrix();
     
     if (edge && life_span < 160) {
       fade += 2;
     } else if (life_span < 75) {
       fade += 3.4;
+    }
+    
+    if (life_span < 100) {
+      shrink += radius/100;
     }
   }
   

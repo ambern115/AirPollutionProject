@@ -10,7 +10,7 @@ double startTime; // time of start of visulization
 double elapsedTime;
 
 // map pieces
-PImage map1;
+PImage map1, map2, map3;
 
 // particle system variables
 int p_count = 0;
@@ -19,18 +19,24 @@ ArrayList<ParticleSystem> emitters; // can initialize to a constant size once da
 
 void setup() {
   // fullscreen
-  size(1000, 600, P3D);
+  size(1200, 800, P3D);
   surface.setTitle("Community Engagement for Air Pollution Reduction in St. Paul");
   startTime = millis();
   
-  map1 = loadImage("satellitemap.png");
+  map1 = loadImage("smap1.png");
+  map2 = loadImage("smap2.png");
+  map3 = loadImage("smap3.png");
   
   emitters = new ArrayList();
   
   // initialize all of the particle emitters
-  ParticleSystem ps = new ParticleSystem(0,0,color(0,0,0),255,1);
+  ParticleSystem ps1 = new ParticleSystem(0,0,color(130,50,50),255,1,500,500);
+  ParticleSystem ps2 = new ParticleSystem(0,0,color(0,0,0),255,1,200,200);
+  ParticleSystem ps3 = new ParticleSystem(0,0,color(130,50,50),255,1,150,50);
   
-  emitters.add(ps);
+  emitters.add(ps1);
+  emitters.add(ps2);
+  emitters.add(ps3);
   
 }
 
@@ -60,19 +66,20 @@ void mouseReleased() {
 
 void mouseWheel(MouseEvent event) {
   float e = event.getCount();
-  zoom = e*-50+zoom;
+  zoom = e*-18+zoom;
 }
 
 // translates the camera on x and y axis
 void translate_cam() {
   if (mouse_lf_pressed) {
-    move_x = (mouseX - x_start)*2; // distance mouse moved in x direction
-    move_y = (mouseY - y_start)*2; // distance mouse mvoed in y direction
+    move_x = (mouseX - x_start)*0.8; // distance mouse moved in x direction
+    move_y = (mouseY - y_start)*0.8; // distance mouse mvoed in y direction
   }
 }
 
 // displays everything that overlays the screen 
 void displayHUD() {
+  translate(200,0,-100);
   fill(246,246,246);
   rect(20,20,225,560,7);
   fill(235,235,235);
@@ -114,7 +121,7 @@ void draw() {
           width/2.0, height/2.0,  0,
             0, 1, 0);
     // increase vision distance
-    //perspective(PI/3.0, width/height, camz/10.0, camz*20.0);
+    perspective(PI/3.0, width/height, camz/10.0, camz*20.0);
     displayHUD();
     translate(cam_pos_x+move_x,cam_pos_y+move_y,zoom);
   endCamera();
@@ -127,11 +134,25 @@ void draw() {
   }
   popMatrix();
   
-  beginShape(); //map1
+  beginShape(); //(1,4)
     texture(map1);
-    vertex(0,0,-500,0,0);
-    vertex(800,0,-500,map1.width,0);
-    vertex(800,600,-500,map1.width,map1.height);
-    vertex(0,600,-500,0,map1.height);
+    vertex(0,0,-10,0,0);
+    vertex(514,0,-10,map1.width,0);
+    vertex(514,648,-10,map1.width,map1.height);
+    vertex(0,648,-10,0,map1.height);
+  endShape();
+  beginShape(); //(2,4)
+    texture(map2);
+    vertex(514,0,-10,0,0);
+    vertex(1028,0,-10,map1.width,0);
+    vertex(1028,648,-10,map1.width,map1.height);
+    vertex(514,648,-10,0,map1.height);
+  endShape();
+  beginShape(); //(2,4)
+    texture(map3);
+    vertex(1028,0,-10,0,0);
+    vertex(1542,0,-10,map1.width,0);
+    vertex(1542,648,-10,map1.width,map1.height);
+    vertex(1028,648,-10,0,map1.height);
   endShape();
 }

@@ -16,6 +16,9 @@ class ParticleSystem {
   float transp = 255;
   color p_color = color(0,0,0);
   
+  float location_x;
+  float location_y;
+  
   
   ParticleSystem(float upv, float outv1, float outv2, float zv1, float zv2) {
     upVel = upv;
@@ -37,12 +40,16 @@ class ParticleSystem {
     
   }
   
-  ParticleSystem(float x_v, float y_v, color c, float trans, float dens) {
+  ParticleSystem(float x_v, float y_v, color c, float trans, float dens, float x, float y) {
     x_vel = x_v;
     y_vel = y_v;
     transp = trans;
     density = dens;
     upVel = 0;
+    location_x = x;
+    location_y = y;
+    
+    p_color = c;
     
     particles = new ArrayList();
     num_p = 0;
@@ -53,11 +60,11 @@ class ParticleSystem {
   void addParticle() {
     //PtVector vel = randomVel(); //<>//
     //vel.addVec(new PtVector(0,-1,0));
-    Vector randPos = randomPosDisk(.5,50,-300);
+    Vector randPos = randomPosDisk(.5,location_x,location_y);
     //Vector vel = getCircPoint(.3,100,-300);
-    Vector vel = new Vector(0.5,0.5,0);
+    Vector vel = new Vector(0,0,0);
     pushMatrix();
-    Particle p = new Particle(randPos,vel,color(230,230,250));
+    Particle p = new Particle(randPos,vel,p_color);
     //p.applyForce(new PtVector(gravity.x,gravity.y,gravity.z)); // always apply gravity
     translate(0,0,35);
     particles.add(p); //<>//
@@ -106,7 +113,7 @@ class ParticleSystem {
   }
   
   void spawnParticles() { //<>//
-    float num_p_to_gen = 2; //number of particles to generate
+    float num_p_to_gen = 3; //number of particles to generate
     
     if (random(1.01) < num_p_to_gen) {
       num_p_to_gen += 1; 
