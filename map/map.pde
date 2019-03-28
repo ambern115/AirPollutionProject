@@ -12,13 +12,26 @@ double elapsedTime;
 // map pieces
 PImage map1;
 
+// particle system variables
+int p_count = 0;
+ArrayList<ParticleSystem> emitters; // can initialize to a constant size once data is in
+
+
 void setup() {
   // fullscreen
   size(1000, 600, P3D);
   surface.setTitle("Community Engagement for Air Pollution Reduction in St. Paul");
   startTime = millis();
   
-  map1 = loadImage("map1.JPG");
+  map1 = loadImage("satellitemap.png");
+  
+  emitters = new ArrayList();
+  
+  // initialize all of the particle emitters
+  ParticleSystem ps = new ParticleSystem(0,0,color(0,0,0),255,1);
+  
+  emitters.add(ps);
+  
 }
 
 void keyPressed() {
@@ -60,15 +73,36 @@ void translate_cam() {
 
 // displays everything that overlays the screen 
 void displayHUD() {
-  textSize(14);
+  fill(246,246,246);
+  rect(20,20,225,560,7);
+  fill(235,235,235);
+  rect(30,30,200,175,7);
+  textSize(20);
   fill(0,0,0);
-  text("                          test",500,500);
+  text("Air Pollution Filters",39,55);
+  
+  
+  
+  fill(230,230,230);
+  rect(30,220,200,225,7);
+  fill(72,73,150);
+  rect(30,220,200,30,7,7,0,0);
+  textSize(20);
+  fill(246,246,246);
+  text("Clean Air Act",63,243);
+  
+  fill(230,230,230);
+  rect(30,455,200,114,7);
+  fill(150,69,69);
+  rect(30,455,200,30,7,7,0,0);
+  fill(246,246,246);
+  text("Health & Lead",62,478);
 }
 
 void draw() {
   elapsedTime = (millis() - startTime) / 1000.0;
   startTime = millis();
-  background(230,230,230);
+  background(220,220,220);
   
   noStroke();
   
@@ -84,6 +118,14 @@ void draw() {
     displayHUD();
     translate(cam_pos_x+move_x,cam_pos_y+move_y,zoom);
   endCamera();
+  
+  pushMatrix();
+  for (int i=0; i < emitters.size(); i++) {
+    emitters.get(i).run();
+    
+    p_count += emitters.get(i).getPCount();
+  }
+  popMatrix();
   
   beginShape(); //map1
     texture(map1);
