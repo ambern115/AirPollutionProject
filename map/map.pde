@@ -10,7 +10,7 @@ double startTime; // time of start of visulization
 double elapsedTime;
 
 // map pieces
-PImage map1, map2, map3;
+PImage mapsample;
 
 // particle system variables
 int p_count = 0;
@@ -22,10 +22,8 @@ void setup() {
   size(1200, 800, P3D);
   surface.setTitle("Community Engagement for Air Pollution Reduction in St. Paul");
   startTime = millis();
-  
-  map1 = loadImage("smap1.png");
-  map2 = loadImage("smap2.png");
-  map3 = loadImage("smap3.png");
+ 
+  mapsample = loadImage("sample.png");
   
   emitters = new ArrayList();
   
@@ -79,7 +77,7 @@ void translate_cam() {
 
 // displays everything that overlays the screen 
 void displayHUD() {
-  translate(200,0,-100);
+  translate(200,0,200);
   fill(246,246,246);
   rect(20,20,225,560,7);
   fill(235,235,235);
@@ -111,6 +109,10 @@ void draw() {
   startTime = millis();
   background(220,220,220);
   
+  if (zoom > 198) {
+    zoom = 198.0;
+  }
+  
   noStroke();
   
   translate_cam();
@@ -134,25 +136,36 @@ void draw() {
   }
   popMatrix();
   
-  beginShape(); //(1,4)
-    texture(map1);
-    vertex(0,0,-10,0,0);
-    vertex(514,0,-10,map1.width,0);
-    vertex(514,648,-10,map1.width,map1.height);
-    vertex(0,648,-10,0,map1.height);
+  
+  
+  
+  beginShape(); 
+    texture(mapsample);
+    vertex(0,0,-10,0);
+    vertex(3400,0,-10,mapsample.width,0);
+    vertex(3400,4000,-10,mapsample.width,mapsample.height);
+    vertex(0,4000,-10,0,mapsample.height);
   endShape();
-  beginShape(); //(2,4)
-    texture(map2);
-    vertex(514,0,-10,0,0);
-    vertex(1028,0,-10,map1.width,0);
-    vertex(1028,648,-10,map1.width,map1.height);
-    vertex(514,648,-10,0,map1.height);
-  endShape();
-  beginShape(); //(2,4)
-    texture(map3);
-    vertex(1028,0,-10,0,0);
-    vertex(1542,0,-10,map1.width,0);
-    vertex(1542,648,-10,map1.width,map1.height);
-    vertex(1028,648,-10,0,map1.height);
-  endShape();
+  
+  //beginShape(); //(1,4)
+  //  texture(map1);
+  //  vertex(0,0,-10,0,0);
+  //  vertex(514,0,-10,map1.width,0);
+  //  vertex(514,648,-10,map1.width,map1.height);
+  //  vertex(0,648,-10,0,map1.height);
+  //endShape();
+  //beginShape(); //(2,4)
+  //  texture(map2);
+  //  vertex(514,0,-10,0,0);
+  //  vertex(1028,0,-10,map1.width,0);
+  //  vertex(1028,648,-10,map1.width,map1.height);
+  //  vertex(514,648,-10,0,map1.height);
+  //endShape();
+  //beginShape(); //(2,4)
+  //  texture(map3);
+  //  vertex(1028,0,-10,0,0);
+  //  vertex(1542,0,-10,map1.width,0);
+  //  vertex(1542,648,-10,map1.width,map1.height);
+  //  vertex(1028,648,-10,0,map1.height);
+  //endShape();
 }
