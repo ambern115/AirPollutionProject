@@ -35,6 +35,9 @@ void setup() {
   emitters.add(ps1);
   emitters.add(ps2);
   emitters.add(ps3);
+  for (int i =0; i < 300; i++) {
+     emitters.add(new ParticleSystem(0,0,color(100,100,100),255,1,200,200));
+  }
   
 }
 

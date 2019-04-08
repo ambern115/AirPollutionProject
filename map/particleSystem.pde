@@ -113,7 +113,7 @@ class ParticleSystem {
   }
   
   void spawnParticles() { //<>//
-    float num_p_to_gen = 3; //number of particles to generate
+    float num_p_to_gen = .25; //number of particles to generate
     
     if (random(1.01) < num_p_to_gen) {
       num_p_to_gen += 1; 
