@@ -16,27 +16,55 @@ PImage mapsample;
 int p_count = 0;
 ArrayList<ParticleSystem> emitters; // can initialize to a constant size once data is in
 
+// object to store the data
+Table pollutionData;
+
+// set variables regarding the map latitude and longitude
+Float minLat = 44.876780; //bottom
+Float maxLat = 44.998441; //top
+Float minLong = -93.228638; //left
+Float maxLong = -92.989036; //right
+int maxX = 3400;
+int maxY = 4000;
+
 
 void setup() {
   // fullscreen
   size(1200, 800, P3D);
   surface.setTitle("Community Engagement for Air Pollution Reduction in St. Paul");
   startTime = millis();
+  
+  pollutionData = loadTable("PointSourceAirEmissionsInventory/MPCA_PointSourceEmissionInventory_Ramsey.csv","header");
  
   mapsample = loadImage("sample.png");
   
   emitters = new ArrayList();
   
   // initialize all of the particle emitters
+  /*
   ParticleSystem ps1 = new ParticleSystem(0,0,color(130,50,50),255,1,500,500);
   ParticleSystem ps2 = new ParticleSystem(0,0,color(0,0,0),255,1,200,200);
   ParticleSystem ps3 = new ParticleSystem(0,0,color(130,50,50),255,1,150,50);
-  
+
   emitters.add(ps1);
   emitters.add(ps2);
   emitters.add(ps3);
-  for (int i =0; i < 300; i++) {
-     emitters.add(new ParticleSystem(0,0,color(100,100,100),255,1,200,200));
+  */
+
+  for(int i=0; i<pollutionData.getRowCount();i++) {
+    TableRow row = pollutionData.getRow(i);
+    int year = row.getInt("YEAR");
+    String facility = row.getString("FACILITY_NAME");
+    String pollutant = row.getString("POLLUTANT");
+    Float emissionsTons = row.getFloat("EMISSIONS (TONS)");
+    String county = row.getString("COUNTY");
+    Float longitude = row.getFloat("LONGITUDE");
+    Float latitude = row.getFloat("LATITUDE");
+    if(latitude < maxLat && latitude > minLat && longitude < maxLong && longitude > minLong){
+      Float x = ((longitude-minLong)/(maxLong-minLong))*maxX;
+      Float y = ((maxLat-latitude)/(maxLat-minLat))*maxY;
+      emitters.add(new ParticleSystem(0,0,color(0,0,0),255,1,x,y));
+    }
   }
   
 }
