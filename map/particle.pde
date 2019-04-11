@@ -15,13 +15,14 @@ class Particle {
   
   float fade = 0;
   boolean edge = false;
+  
 
   // default
   Particle() {
     location = new Vector(width/2,10,random(-2,0));
     acceleration = new Vector(0,0.05,0);
     velocity = new Vector(random(-1,1),random(-2,0),random(-4,0));
-
+    
     start_time = millis();
   }
   
@@ -107,14 +108,20 @@ class Particle {
     life_span--;
   }
   
-  float shrink = 0;
+  int size = 5;
   void display() {
     
     pushMatrix();      
       translate(location.x, location.y, location.z);
       fill(p_color,255-fade);
-      //tint(255,255-fade);
-      ellipse(0, 0, radius-shrink, radius-shrink);
+      //tint(200,200,200,255-fade);
+      //smoke.resize(40-(int)shrink,40-(int)shrink);
+      size = (int) (50*(life_span/245)) + 5;
+      //println(60-size);
+      //smoke.resize(70-size,65-size);
+      //scale(size);
+      //image(smoke,0,0);
+      ellipse(0, 0, 55-size, 55-size);
     popMatrix();
     
     if (edge && life_span < 160) {
@@ -123,9 +130,7 @@ class Particle {
       fade += 3.4;
     }
     
-    if (life_span < 100) {
-      shrink += radius/100;
-    }
+
   }
   
   void run() {
