@@ -17,7 +17,6 @@ PImage mapsample;
 int p_count = 0;
 ArrayList<ParticleSystem> emitters; // can initialize to a constant size once data is in
 
-
 // object to store the data
 Table pollutionData;
 
@@ -37,7 +36,7 @@ PFont font;
 
 void setup() {
   // fullscreen
-  size(1200, 800, P3D);
+  size(1320, 660, P3D);
   surface.setTitle("Community Engagement for Air Pollution Reduction in St. Paul");
   startTime = millis();
 
@@ -96,9 +95,14 @@ boolean checkForSource(float x, float y) {
   return true;
 }
 
+
+boolean space_hit = false;
+
 void keyPressed() {
   if (keyCode == ENTER && !sim_started) {
     sim_started = !sim_started;
+  } else if (keyCode == 32) {
+      space_hit = !space_hit;
   }
 }
 
@@ -135,29 +139,33 @@ void translate_cam() {
 
 // displays everything that overlays the screen 
 void displayHUD() {
-  fill(0,0,0);
-  rect(400, 45, 50, 50);
-  image(arrow,415,50);
+  //fill(0,0,0);
+  //rect(400, 45, 50, 50);
+  //image(arrow,415,50);
   
-  fill(246, 246, 246);
-  rect(200, 20, 225, 750, 7);
+  //fill(246, 246, 246);
+  //rect(200, 20, 225, 750, 7);
 
-  textFont(font);
+  //textFont(font);
 
-  fill(230, 230, 230);
-  rect(210, 35, 206, 270, 7);
-  fill(72, 73, 150);
-  rect(210, 35, 206, 30, 7, 7, 0, 0);
-  textSize(20);
-  fill(246, 246, 246);
-  text("Clean Air Act", 258, 57);
+  //fill(230, 230, 230);
+  //rect(210, 35, 206, 270, 7);
+  //fill(72, 73, 150);
+  //rect(210, 35, 206, 30, 7, 7, 0, 0);
+  //textSize(20);
+  //fill(246, 246, 246);
+  //text("Clean Air Act", 258, 57);
 
-  fill(230, 230, 230);
-  rect(210, 325, 206, 114, 7);
-  fill(150, 69, 69);
-  rect(210, 325, 206, 30, 7, 7, 0, 0);
-  fill(246, 246, 246);
-  text("Health & Lead", 250, 347);
+  //fill(230, 230, 230);
+  //rect(210, 325, 206, 114, 7);
+  //fill(150, 69, 69);
+  //rect(210, 325, 206, 30, 7, 7, 0, 0);
+  //fill(246, 246, 246);
+  //text("Health & Lead", 250, 347);
+  
+  
+  fill(0,0,0);
+  circle(1000,600,50);
 }
 
 void draw() {
@@ -184,24 +192,31 @@ void draw() {
   translate(cam_pos_x+move_x, cam_pos_y+move_y, zoom);
   endCamera();
 
+  // previous map z value was at -10
+  // 3400 x 4000 --> 5581 x 4000
   beginShape(); 
   texture(mapsample);
   vertex(0, 0, -10, 0);
-  vertex(3400, 0, -10, mapsample.width, 0);
-  vertex(3400, 4000, -10, mapsample.width, mapsample.height);
+  vertex(5581, 0, -10, mapsample.width, 0);
+  vertex(5581, 4000, -10, mapsample.width, mapsample.height);
   vertex(0, 4000, -10, 0, mapsample.height);
   endShape();
 
   pushMatrix();
   for (int i=0; i < emitters.size(); i++) {
     emitters.get(i).run();
-
     p_count += emitters.get(i).getPCount();
   }
   popMatrix();
 
-
-
+  //if (space_hit) {
+  //  pushMatrix();
+  //    for (int i=0; i < emitters.size(); i++) {
+  //      emitters.get(i).applyForce(new Vector(0,0,0));
+  //    }
+  //  popMatrix();
+  //}
+  
   //beginShape(); //(1,4)
   //  texture(map1);
   //  vertex(0,0,-10,0,0);

@@ -129,7 +129,7 @@ class ParticleSystem {
   
   void run() {
     spawnParticles();
-    for (int i = 0; i < num_p; i++) {
+    for (int i = num_p-1; i >= 0; i--) {
       Particle p = particles.get(i);
       p.run();
       if (p.isDead()) {
