@@ -25,7 +25,7 @@ Float minLat = 44.876780; //bottom
 Float maxLat = 44.998441; //top
 Float minLong = -93.228638; //left
 Float maxLong = -92.989036; //right
-int maxX = 3400;
+int maxX = 5581;
 int maxY = 4000;
 
 PImage smoke;
@@ -94,7 +94,6 @@ boolean checkForSource(float x, float y) {
   }
   return true;
 }
-
 
 boolean space_hit = false;
 
