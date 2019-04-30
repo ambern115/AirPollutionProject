@@ -28,7 +28,9 @@ Float maxLong = -92.989036; //right
 int maxX = 5581;
 int maxY = 4000;
 
-PImage smoke;
+PImage smoke_1, smoke_2, smoke_3, smoke_4, smoke_5;
+PImage smoke_6, smoke_7, smoke_8, smoke_9, smoke_10;
+PImage smoke_11, smoke_12, smoke_13, smoke_14;
 PImage arrow;
 
 PFont font;
@@ -40,7 +42,36 @@ void setup() {
   surface.setTitle("Community Engagement for Air Pollution Reduction in St. Paul");
   startTime = millis();
 
-  smoke = loadImage("smoke.png");
+  smoke_1 = loadImage("smoke.png");
+  smoke_2 = loadImage("smoke.png");
+  smoke_3 = loadImage("smoke.png");
+  smoke_4 = loadImage("smoke.png");
+  smoke_5 = loadImage("smoke.png");
+  smoke_6 = loadImage("smoke.png");
+  smoke_7 = loadImage("smoke.png");
+  smoke_8 = loadImage("smoke.png");
+  smoke_9 = loadImage("smoke.png");
+  smoke_10 = loadImage("smoke.png");
+  smoke_11 = loadImage("smoke.png");
+  smoke_12 = loadImage("smoke.png");
+  smoke_13 = loadImage("smoke.png");
+  smoke_14 = loadImage("smoke.png");
+  
+  smoke_1.resize(10,10);
+  smoke_2.resize(15,15);
+  smoke_3.resize(20,20);
+  smoke_4.resize(26,26);
+  smoke_5.resize(37,37);
+  smoke_6.resize(48,48);
+  smoke_7.resize(58,58);
+  smoke_8.resize(70,70);
+  smoke_9.resize(81,82);
+  smoke_10.resize(92,92);
+  smoke_11.resize(100,100);
+  smoke_12.resize(108,108);
+  smoke_13.resize(116,116);
+  smoke_14.resize(124,124);
+  
   arrow = loadImage("arrow.png");
   arrow.resize(40,40);
 
@@ -190,13 +221,16 @@ void draw() {
   // previous map z value was at -10
   // 3400 x 4000 --> 5581 x 4000
   
-  //beginShape(); 
-  //texture(mapsample);
-  //vertex(0, 0, -10, 0);
-  //vertex(5581, 0, -10, mapsample.width, 0);
-  //vertex(5581, 4000, -10, mapsample.width, mapsample.height);
-  //vertex(0, 4000, -10, 0, mapsample.height);
-  //endShape();
+
+  beginShape();
+  tint(255,255,255,255);
+  texture(mapsample);
+  vertex(0, 0, -10, 0);
+  vertex(5581, 0, -10, mapsample.width, 0);
+  vertex(5581, 4000, -10, mapsample.width, mapsample.height);
+  vertex(0, 4000, -10, 0, mapsample.height);
+  endShape();
+
 
   pushMatrix();
     emitter.run();

@@ -137,17 +137,24 @@ class ParticleSystem {
   void spawnParticles(float x, float y, float num_to_gen) {   //<>//
     float temp_num_to_gen = num_to_gen; 
     
-    if (num_to_gen > 1) {
-      temp_num_to_gen = num_to_gen/2; // even it o
-    }
+    //if (num_to_gen > 1) {
+    //  temp_num_to_gen = num_to_gen/2; // even it o
+    //}
     
-    println(num_to_gen);
-    //float num_p_to_gen = .25; //number of particles to generate
-    
-    if (random(1.01) < num_to_gen) {
-      temp_num_to_gen += 1; 
+    //find a way to standardize size
+    if (num_to_gen < 1) {
+      num_to_gen = 1;
+    } else if (num_to_gen > 2) {
+      num_to_gen = num_to_gen/2;
     }
-    for (int i=0; i < temp_num_to_gen; i++) {
+   
+    ////float num_p_to_gen = .25; //number of particles to generate
+    //float rand = random(1.01);
+    //if (rand < temp_num_to_gen) {
+    //  temp_num_to_gen += 1; 
+    //}
+    
+    for (int i=0; i < (int)num_to_gen; i++) {
       addParticle(x,y);
     } 
   }
