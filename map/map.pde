@@ -15,7 +15,7 @@ PImage mapsample;
 // particle system variables
 
 int p_count = 0;
-ArrayList<ParticleSystem> emitters; // can initialize to a constant size once data is in
+ParticleSystem emitter; // emits all of the smoke particles
 
 // object to store the data
 Table pollutionData;
@@ -35,7 +35,7 @@ PFont font;
 
 
 void setup() {
-  // fullscreen
+  // fullscreen...
   size(1320, 660, P3D);
   surface.setTitle("Community Engagement for Air Pollution Reduction in St. Paul");
   startTime = millis();
@@ -50,20 +50,11 @@ void setup() {
 
   mapsample = loadImage("sample.png");
 
-  emitters = new ArrayList();
-
-  // initialize all of the particle emitters
-
-  //ParticleSystem ps1 = new ParticleSystem(0,0,color(130,50,50),255,1,500,500);
-  //ParticleSystem ps2 = new ParticleSystem(0,0,color(0,0,0),255,1,200,200);
-  //ParticleSystem ps3 = new ParticleSystem(0,0,color(130,50,50),255,1,150,50);
-
-  //emitters.add(ps1);
-  //emitters.add(ps2);
-  //emitters.add(ps3);
-
-
-  for (int i=0; i<pollutionData.getRowCount(); i++) {
+  int num_sources = pollutionData.getRowCount();
+  int real_num_sources = 0; // actual number of unique pollution sources
+  emitter = new ParticleSystem(color(0,0,0), num_sources);
+  
+  for (int i=0; i < num_sources; i++) {
     TableRow row = pollutionData.getRow(i);
     int year = row.getInt("YEAR");
     String facility = row.getString("FACILITY_NAME");
@@ -76,23 +67,26 @@ void setup() {
       && year == 2017) {
       Float x = ((longitude-minLong)/(maxLong-minLong))*maxX;
       Float y = ((maxLat-latitude)/(maxLat-minLat))*maxY;
-      if (checkForSource(x, y)) {
-        emitters.add(new ParticleSystem(0, 0, color(0, 0, 0), 255, 1, x, y));
+      
+      if (!checkForSource(x,y)) { // if source does not already exist, add it
+        // add new coordinates and emission amount to the emitter
+        emitter.addSource(x,y,emissionsTons); // TODO: emissionsTons needs to be standardized
+        real_num_sources++;
       }
     }
   }
+  
+  emitter.shrinkArrays(real_num_sources);
 }
 
-// checks to see if source exists or not?
+// checks to see if source exists or not
 boolean checkForSource(float x, float y) {
-  ParticleSystem temp_ps;
-  for (int i=0; i < emitters.size(); i++) {
-    temp_ps = emitters.get(i);
-    if (temp_ps.location_x == x && temp_ps.location_y == y) {
-      return false;
+  for (int i=0; i < emitter.source_idx; i++) { 
+    if (emitter.x_coordinates[i] == x && emitter.y_coordinates[i] == y) {
+      return true;
     }
   }
-  return true;
+  return false;
 }
 
 boolean space_hit = false;
@@ -167,6 +161,8 @@ void displayHUD() {
   circle(1000,600,50);
 }
 
+int max_p_count = 0;
+
 void draw() {
   elapsedTime = (millis() - startTime) / 1000.0;
   startTime = millis();
@@ -193,23 +189,24 @@ void draw() {
 
   // previous map z value was at -10
   // 3400 x 4000 --> 5581 x 4000
-  beginShape(); 
-  texture(mapsample);
-  vertex(0, 0, -10, 0);
-  vertex(5581, 0, -10, mapsample.width, 0);
-  vertex(5581, 4000, -10, mapsample.width, mapsample.height);
-  vertex(0, 4000, -10, 0, mapsample.height);
-  endShape();
+  
+  //beginShape(); 
+  //texture(mapsample);
+  //vertex(0, 0, -10, 0);
+  //vertex(5581, 0, -10, mapsample.width, 0);
+  //vertex(5581, 4000, -10, mapsample.width, mapsample.height);
+  //vertex(0, 4000, -10, 0, mapsample.height);
+  //endShape();
 
   pushMatrix();
-  for (int i=0; i < emitters.size(); i++) {
-    emitters.get(i).run();
-    p_count += emitters.get(i).getPCount();
-  }
-  popMatrix();
-
-  //if (space_hit) {
-  //  pushMatrix();
+    emitter.run();
+  popMatrix(); 
+  
+  //if (emitter.num_p > max_p_count) {
+  //  max_p_count = emitter.num_p;
+  //}
+  //println(max_p_count);
+ //  pushMatrix();
   //    for (int i=0; i < emitters.size(); i++) {
   //      emitters.get(i).applyForce(new Vector(0,0,0));
   //    }

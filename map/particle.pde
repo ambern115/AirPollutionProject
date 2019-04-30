@@ -108,21 +108,23 @@ class Particle {
     life_span--;
   }
   
-  int size = 5;
+  int size = 0;
   void display() {
     
     pushMatrix();      
-      translate(location.x, location.y, location.z);
-      fill(p_color,255-fade);
-      //tint(200,200,200,255-fade);
+      translate(location.x, location.y, -50+size);
+      //fill(p_color,255-fade);
+      tint(200,200,200,255-fade);
       //smoke.resize(40-(int)shrink,40-(int)shrink);
-      size = (int) (50*(life_span/245)) + 5;
+      //size = (int) (50*(life_span/245)) + 5;
       //println(60-size);
       //smoke.resize(70-size,65-size);
       //scale(size);
-      //image(smoke,0,0);
-      ellipse(0, 0, 55-size, 55-size);
+      image(smoke,0,0);
+      //ellipse(0, 0, 55-size, 55-size);
     popMatrix();
+    
+    size+= 5;
     
     if (edge && life_span < 160) {
       fade += 2;
