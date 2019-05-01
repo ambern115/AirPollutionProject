@@ -84,6 +84,7 @@ void setup() {
   arrow.resize(40,40);
 
   font = createFont("AGaramondPro-Regular.otf", 22);
+  subFont = createFont("AGaramondPro-Regular.otf", 14);
 
   pollutionData = loadTable("PointSourceAirEmissionsInventory/MPCA_PointSourceEmissionInventory_Ramsey.csv", "header");
 
