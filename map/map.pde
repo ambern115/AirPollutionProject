@@ -28,12 +28,20 @@ Float maxLong = -92.989036; //right
 int maxX = 5581;
 int maxY = 4000;
 
+// define images
 PImage smoke_1, smoke_2, smoke_3, smoke_4, smoke_5;
 PImage smoke_6, smoke_7, smoke_8, smoke_9, smoke_10;
 PImage smoke_11, smoke_12, smoke_13, smoke_14;
 PImage arrow;
 
+// set up variables to print regarding locations
+String printFacility = "";
+String printPollutant = "";
+Float printEmissions = 0.0;
+
+// set up fonts
 PFont font;
+PFont subFont;
 
 
 void setup() {
@@ -88,10 +96,7 @@ void setup() {
   for (int i=0; i < num_sources; i++) {
     TableRow row = pollutionData.getRow(i);
     int year = row.getInt("YEAR");
-    String facility = row.getString("FACILITY_NAME");
-    String pollutant = row.getString("POLLUTANT");
     Float emissionsTons = row.getFloat("EMISSIONS (TONS)");
-    String county = row.getString("COUNTY");
     Float longitude = row.getFloat("LONGITUDE");
     Float latitude = row.getFloat("LATITUDE");
     if (latitude < maxLat && latitude > minLat && longitude < maxLong && longitude > minLong
@@ -135,6 +140,38 @@ void mousePressed() {
     mouse_lf_pressed = true;
     x_start = mouseX;
     y_start = mouseY;
+    
+    Float minDistance = 999999.0;
+    String minFacility = "";
+    String minPollutant = "";
+    Float minEmissions = 0.0;
+    
+    for (int i=0; i<pollutionData.getRowCount(); i++) {
+      TableRow row = pollutionData.getRow(i);
+      int year = row.getInt("YEAR");
+      String facility = row.getString("FACILITY_NAME");
+      String pollutant = row.getString("POLLUTANT");
+      Float emissionsTons = row.getFloat("EMISSIONS (TONS)");
+      Float longitude = row.getFloat("LONGITUDE");
+      Float latitude = row.getFloat("LATITUDE");
+      if (latitude < maxLat && latitude > minLat && longitude < maxLong && longitude > minLong
+        && year == 2017) {
+        Float x = ((longitude-minLong)/(maxLong-minLong))*maxX;
+        Float y = ((maxLat-latitude)/(maxLat-minLat))*maxY;
+        Float distance = sqrt(pow((mouseX-x),2)+pow((mouseY-y),2));
+        if(distance < minDistance) {
+          print("mousex: " + mouseX + ", mousey: " + mouseY + "\n");
+          print("x: " + x + ", y: " + y + "\n");
+          minFacility = facility;
+          minPollutant = pollutant;
+          minEmissions = emissionsTons;
+          minDistance = distance;
+        }
+      }
+    }
+    printFacility = minFacility;
+    printPollutant = minPollutant;
+    printEmissions = minEmissions;
   }
 }
 
@@ -163,33 +200,72 @@ void translate_cam() {
 
 // displays everything that overlays the screen 
 void displayHUD() {
-  //fill(0,0,0);
-  //rect(400, 45, 50, 50);
-  //image(arrow,415,50);
-  
-  //fill(246, 246, 246);
-  //rect(200, 20, 225, 750, 7);
+  //initial panel setup
+  fill(246, 246, 246);
+  rect(0, 0, 225, 660);
 
-  //textFont(font);
-
-  //fill(230, 230, 230);
-  //rect(210, 35, 206, 270, 7);
-  //fill(72, 73, 150);
-  //rect(210, 35, 206, 30, 7, 7, 0, 0);
-  //textSize(20);
-  //fill(246, 246, 246);
-  //text("Clean Air Act", 258, 57);
-
-  //fill(230, 230, 230);
-  //rect(210, 325, 206, 114, 7);
-  //fill(150, 69, 69);
-  //rect(210, 325, 206, 30, 7, 7, 0, 0);
-  //fill(246, 246, 246);
-  //text("Health & Lead", 250, 347);
-  
-  
+  //personal actions box
+  //header
+  fill(47, 48, 94);
+  rect(9, 10, 207, 30, 0, 0, 0, 0);
+  textFont(font);
+  fill(246, 246, 246);
+  text("Personal Actions", 40, 32);
+  //box
+  fill(230, 230, 230);
+  rect(9, 40, 207, 270);
+  textFont(subFont);
   fill(0,0,0);
-  circle(1000,600,50);
+  text("- Bike, Walk, Take Public Transit", 15, 60);
+  text("- Install Solar Panels", 15, 80);
+  text("- Don't Burn Leaves/Trash", 15, 100);
+  text("- Plant Trees", 15, 120);
+  text("- Choose Energy-Efficient Appliances", 15, 140);
+  text("- Limit City Campfires", 15, 160);
+  text("- Advocate for Education/Programs:", 15, 180);
+  text("   - Small Business Environmental", 15, 200);
+  text("     Assistance Program", 15, 220);
+  text("   - GreenStep Cities", 15, 240);
+  text("   - Minnesota GreenCorps", 15, 260);
+  text("- More Information At:", 15, 280);
+  text("  https://bit.ly/2vygYfg", 15, 300);
+
+  //health impacts box
+  //header
+  fill(104, 104, 104);
+  rect(9, 325, 207, 30, 0, 0, 0, 0);
+  textFont(font);
+  fill(246, 246, 246);
+  text("Health Effects", 55, 348);
+  //box
+  fill(230, 230, 230);
+  rect(9, 355, 207, 114);
+  textFont(subFont);
+  fill(0,0,0);
+  text("Air pollution can trigger issues for those with asthma or COPD and can increase risk of respiratory infections, heart disease, stroke, and lung cancer. More info at: https://bit.ly/2VA6j2d",15,362,200,110);
+  
+  //box upon click
+  //header
+  fill(212, 119, 119);
+  rect(9, 485, 207, 30, 0, 0, 0, 0);
+  textFont(font);
+  fill(246, 246, 246);
+  text("Location Information", 18, 506);
+  //box
+  fill(230, 230, 230);
+  rect(9, 515, 207, 135);
+  textFont(subFont);
+  fill(0,0,0);
+  text("Facility:", 15, 525, 200, 130);
+  text(printFacility, 15, 545, 200, 130);
+  text("Pollutant:", 15, 565, 200, 130);
+  text(printPollutant, 15, 585, 200, 130);
+  text("Emissions (Tons):", 15, 605, 200, 130);
+  text(str(printEmissions), 15, 625, 200, 130);
+  
+  //compass
+  fill(0,0,0);
+  circle(1250,600,50);
 }
 
 int max_p_count = 0;
