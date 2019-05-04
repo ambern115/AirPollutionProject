@@ -4,6 +4,10 @@ class Particle {
   Vector velocity;
   Vector acceleration;
   
+  // used to identify what source this particle is connected to
+  String source = ""; // name of it's source company
+  float x_spawn, y_spawn; // x,y location this particle spawned at 
+  
   color p_color;
   float mass = 2;
   float radius = 3;

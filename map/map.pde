@@ -46,7 +46,7 @@ PFont subFont;
 
 void setup() {
   // fullscreen...
-  size(1320, 660, P3D);
+  size(1590, 795, P3D);
   surface.setTitle("Community Engagement for Air Pollution Reduction in St. Paul");
   startTime = millis();
 
@@ -100,14 +100,16 @@ void setup() {
     Float emissionsTons = row.getFloat("EMISSIONS (TONS)");
     Float longitude = row.getFloat("LONGITUDE");
     Float latitude = row.getFloat("LATITUDE");
+    String company = row.getString("FACILITY_NAME");
+    String pollutant = row.getString("POLLUTANT");
     if (latitude < maxLat && latitude > minLat && longitude < maxLong && longitude > minLong
       && year == 2017) {
       Float x = ((longitude-minLong)/(maxLong-minLong))*maxX;
       Float y = ((maxLat-latitude)/(maxLat-minLat))*maxY;
       
-      if (!checkForSource(x,y)) { // if source does not already exist, add it
+      if (!checkForSource(x,y,emissionsTons,company,pollutant)) { // if source does not already exist, add it
         // add new coordinates and emission amount to the emitter
-        emitter.addSource(x,y,emissionsTons); // TODO: emissionsTons needs to be standardized
+        emitter.addSource(x,y,emissionsTons,company,pollutant); 
         real_num_sources++;
       }
     }
@@ -117,9 +119,16 @@ void setup() {
 }
 
 // checks to see if source exists or not
-boolean checkForSource(float x, float y) {
+boolean checkForSource(float x, float y, float e, String name, String pollutant) {
   for (int i=0; i < emitter.source_idx; i++) { 
     if (emitter.x_coordinates[i] == x && emitter.y_coordinates[i] == y) {
+      // add the emission amount to the already existing emissions amt for this source
+      emitter.amount_to_gen[i] += e;
+      
+      ArrayList<String> temp_al = new ArrayList();
+      temp_al.add(pollutant); 
+      temp_al.add(name);
+      emitter.pollutant_search.get(i).add(temp_al);
       return true;
     }
   }
@@ -147,33 +156,42 @@ void mousePressed() {
     String minPollutant = "";
     Float minEmissions = 0.0;
     
-    for (int i=0; i<pollutionData.getRowCount(); i++) {
-      TableRow row = pollutionData.getRow(i);
-      int year = row.getInt("YEAR");
-      String facility = row.getString("FACILITY_NAME");
-      String pollutant = row.getString("POLLUTANT");
-      Float emissionsTons = row.getFloat("EMISSIONS (TONS)");
-      Float longitude = row.getFloat("LONGITUDE");
-      Float latitude = row.getFloat("LATITUDE");
-      if (latitude < maxLat && latitude > minLat && longitude < maxLong && longitude > minLong
-        && year == 2017) {
-        Float x = ((longitude-minLong)/(maxLong-minLong))*maxX;
-        Float y = ((maxLat-latitude)/(maxLat-minLat))*maxY;
-        Float distance = sqrt(pow((mouseX-x),2)+pow((mouseY-y),2));
-        if(distance < minDistance) {
-          print("mousex: " + mouseX + ", mousey: " + mouseY + "\n");
-          print("x: " + x + ", y: " + y + "\n");
-          minFacility = facility;
-          minPollutant = pollutant;
-          minEmissions = emissionsTons;
-          minDistance = distance;
-        }
-      }
-    }
-    printFacility = minFacility;
-    printPollutant = minPollutant;
-    printEmissions = minEmissions;
+    float true_x = (mouseX-(cam_pos_x))/zoom;
+    float true_longitude = (true_x * (maxLong-minLong))/maxX + minLong;
+    float true_y = (mouseY-(cam_pos_y))/zoom;
+    float true_latitude = -1*((true_y*(maxLat-minLat))/maxY)+maxLat;
+    println(true_latitude + ", " + true_longitude);
+    
+    
   }
+    
+  //  for (int i=0; i<pollutionData.getRowCount(); i++) {
+  //    TableRow row = pollutionData.getRow(i);
+  //    int year = row.getInt("YEAR");
+  //    String facility = row.getString("FACILITY_NAME");
+  //    String pollutant = row.getString("POLLUTANT");
+  //    Float emissionsTons = row.getFloat("EMISSIONS (TONS)");
+  //    Float longitude = row.getFloat("LONGITUDE");
+  //    Float latitude = row.getFloat("LATITUDE");
+  //    if (latitude < maxLat && latitude > minLat && longitude < maxLong && longitude > minLong
+  //      && year == 2017) {
+  //      Float x = ((longitude-minLong)/(maxLong-minLong))*maxX;
+  //      Float y = ((maxLat-latitude)/(maxLat-minLat))*maxY;
+  //      Float distance = sqrt(pow((mouseX-x),2)+pow((mouseY-y),2));
+  //      if(distance < minDistance) {
+  //        print("mousex: " + mouseX + ", mousey: " + mouseY + "\n");
+  //        print("x: " + x + ", y: " + y + "\n");
+  //        minFacility = facility;
+  //        minPollutant = pollutant;
+  //        minEmissions = emissionsTons;
+  //        minDistance = distance;
+  //      }
+  //    }
+  //  }
+  //  printFacility = minFacility;
+  //  printPollutant = minPollutant;
+  //  printEmissions = minEmissions;
+  //}
 }
 
 void mouseReleased() {
