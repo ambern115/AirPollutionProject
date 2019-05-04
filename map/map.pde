@@ -151,10 +151,10 @@ void mousePressed() {
     x_start = mouseX;
     y_start = mouseY;
     
-    Float minDistance = 999999.0;
-    String minFacility = "";
-    String minPollutant = "";
-    Float minEmissions = 0.0;
+    Float min_distance = 999999.0;
+    String min_facility = "";
+    String min_pollutant = "";
+    Float min_emissions = 0.0;
     
     float true_x = (mouseX-(cam_pos_x))/zoom;
     float true_longitude = (true_x * (maxLong-minLong))/maxX + minLong;
@@ -162,7 +162,22 @@ void mousePressed() {
     float true_latitude = -1*((true_y*(maxLat-minLat))/maxY)+maxLat;
     println(true_latitude + ", " + true_longitude);
     
-    
+    int num_sources = emitter.x_coordinates.length;
+  
+    for (int i=0; i < num_sources; i++) {
+      Float x = emitter.x_coordinates[i];
+      Float y = emitter.y_coordinates[i];
+      Float distance = sqrt(pow((true_x-x),2)+pow((true_y-y),2));
+      if(distance < min_distance){
+        min_facility = emitter.company_names[i];
+        min_pollutant = emitter.main_pollutants[i];
+        min_emissions = emitter.amount_to_gen[i];
+        min_distance = distance;
+      }
+    }
+    printFacility = min_facility;
+    printPollutant = min_pollutant;
+    printEmissions = min_emissions;
   }
     
   //  for (int i=0; i<pollutionData.getRowCount(); i++) {
